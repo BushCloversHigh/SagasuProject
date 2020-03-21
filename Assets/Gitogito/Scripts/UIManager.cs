@@ -3,11 +3,13 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System.Collections;
 
+// UIの共通部分のクラス
 public class UIManager : MonoBehaviour
 {
     private float fadeSpeed = 0.3f;
     private bool isShowing = false;
     private IEnumerator cor;
+    // トーストを表示
     public void ShowToast (string message)
     {
         if (isShowing)
@@ -28,6 +30,7 @@ public class UIManager : MonoBehaviour
         StartCoroutine (cor);
     }
 
+    // トーストを閉じる
     private IEnumerator Close ()
     {
         yield return new WaitForSeconds (3f);
@@ -41,11 +44,13 @@ public class UIManager : MonoBehaviour
         isShowing = false;
     }
 
+    // ロード中のアニメーション
     public void Loading ()
     {
         GameObject.Find ("UI/System").transform.Find("Load").gameObject.SetActive (true);
     }
 
+    // ロード中のアニメーションを消す
     public void LoadEnd ()
     {
         Invoke ("LoadEnd2", 1f);

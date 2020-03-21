@@ -1,10 +1,12 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 
+// インタラクティブ (扉など)のオブジェクトのクラス
 public class InteractSound : MonoBehaviour
 {
+    // 材質
     [SerializeField] private Attribute attribute;
 
+    // 効果音クラスを取得するためのプロパティ
     private SoundEffecter _soundEffecter;
     private SoundEffecter soundEffecter
     {
@@ -14,6 +16,7 @@ public class InteractSound : MonoBehaviour
         }
     }
 
+    // 効果音を鳴らす
     public void Play ()
     {
         soundEffecter.PlayAnytime (attribute);

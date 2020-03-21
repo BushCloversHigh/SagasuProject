@@ -1,31 +1,39 @@
 ﻿using UnityEngine;
 
+// 材質の種類それに伴った効果音
 public enum Attribute
 {
     WOOD, GRASS, METAL, PLASTIC, HEAVY, DOOR, DRAW, DON, KA_, YEAH
 }
 
+// BGMの種類
 public enum BGM
 {
     GAME, TITLE, RESULT
 }
 
+// 効果音クラス
 public class SoundEffecter : MonoBehaviour
 {
+    // Attribute列挙型に合わせてアタッチする
     [SerializeField] private AudioClip[] soundEffects;
 
+    // オーディオソース
     private AudioSource se_audio, bgm_audio;
+    // 音を鳴らせるかのフラグ
     private bool able = false;
     private float t = 0f;
 
     private void Start ()
     {
+        // コンポーネントを取得
         bgm_audio = transform.GetChild (0).GetComponent<AudioSource> ();
         se_audio = transform.GetChild(1).GetComponent<AudioSource> ();
     }
 
     private void Update ()
     {
+        // 一回音が鳴ったら、0.1秒後に鳴らせるようになる
         if (!able)
         {
             t += Time.deltaTime;
@@ -37,6 +45,7 @@ public class SoundEffecter : MonoBehaviour
         }
     }
 
+    // 効果音を再生
     public void Play (Attribute attribute)
     {
         if (able)
@@ -46,11 +55,13 @@ public class SoundEffecter : MonoBehaviour
         }
     }
 
+    // able変数に関係なく、絶対に鳴らせる
     public void PlayAnytime (Attribute attribute)
     {
         se_audio.PlayOneShot (soundEffects[(int)attribute]);
     }
 
+    // BGMを変更する
     public void BGMChange (BGM bgm)
     {
         string pass;
@@ -74,6 +85,7 @@ public class SoundEffecter : MonoBehaviour
         bgm_audio.Play ();
     }
 
+    // BGMのボリュームを変更する
     public void BGMVolume (float volume)
     {
         bgm_audio.volume = volume;

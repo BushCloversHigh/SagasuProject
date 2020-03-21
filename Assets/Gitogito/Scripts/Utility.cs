@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+// 汎用的に使われるクラスを返すクラス
 public class Utility : MonoBehaviour
 {
     public SoundEffecter soundEffecter

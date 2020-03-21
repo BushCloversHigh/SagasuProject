@@ -3,16 +3,20 @@ using UnityEngine;
 using NCMB;
 using UnityEngine.UI;
 
+// ランキングのクラス
 public class Ranking : UIManager
 {
+    // ランカーオブジェクト
     [SerializeField] private GameObject rankerPrefab;
 
     private void Start ()
     {
+        // NCMBのキーを設定
         NCMBSettings.ApplicationKey = MyStrings.NCMB_APPKEY;
         NCMBSettings.ClientKey = MyStrings.NCMB_CLIENTKEY;
     }
 
+    // ランキングを初期化
     public void Init ()
     {
         GameObject rankingUI = GameObject.Find ("UI/Ranking/Panel");
@@ -25,10 +29,10 @@ public class Ranking : UIManager
         GetRanking ();
     }
 
+    // ランキングをサーバーから取得し適用
     public void GetRanking ()
     {
         Loading ();
-        // データストアの「HighScore」クラスから検索
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject> ("Ranking");
         query.OrderByAscending ("Time");
         query.Limit = 30;
@@ -36,12 +40,11 @@ public class Ranking : UIManager
         {
             if (e != null)
             {
-                //検索失敗時の処理
                 ShowToast ("エラーが発生しました。");
             }
             else
             {
-                //検索成功時の処理
+                // ランカーの内容を適用していく
                 Transform rankerParent = GameObject.Find ("UI/Ranking/Panel/LeaderBoard/Viewport/Content").transform;
                 int r = 0;
                 foreach (NCMBObject obj in objList)
@@ -59,29 +62,32 @@ public class Ranking : UIManager
         });
     }
 
+    // スコアをアップロード
     public void UploadScore ()
     {
+        // タイムがないとアップロードできない
         if (DataManager.GetBestScore () < 0.01f)
         {
             ShowToast ("スコアがありません。");
             return;
         }
+        // 名前を入力してないとアップロードできない
         string upName = GameObject.Find ("UI/Ranking/Panel/InputField").GetComponent<InputField> ().text;
         if (string.IsNullOrEmpty (upName))
         {
             ShowToast ("名前を入力してください。");
             return;
         }
+        // ローディングのクルクルを表示
         Loading ();
-        // データストアの「HighScore」クラスから、Nameをキーにして検索
+        // アップロード
         NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject> ("Ranking");
         query.WhereEqualTo ("Name", upName);
         query.FindAsync ((List<NCMBObject> objList, NCMBException e) =>
         {
-            //検索成功したら
             if (e == null)
             {
-                //未登録
+                // 新規登録
                 if (objList.Count == 0)
                 {
                     NCMBObject obj = new NCMBObject ("Ranking");
@@ -100,8 +106,9 @@ public class Ranking : UIManager
                         }
                     });
                 }
-                else
+                else // 更新
                 {
+                    // サーバーの方が遅い時更新できる
                     float cloudScore = (float)System.Convert.ToDouble (objList[0]["Time"]);
                     if (DataManager.GetBestScore () < cloudScore)
                     {
@@ -121,6 +128,7 @@ public class Ranking : UIManager
                     }
                     else
                     {
+                        // 初期化
                         Init ();
                     }
                 }

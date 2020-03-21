@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
+// タイトル画面でドアを開くクラス
 public class TouchOpen : MonoBehaviour
 {
+    // 開いているか
     private bool opened = false;
+    // プレイヤーがぶつかったらドアを開く
     private void OnCollisionEnter (Collision collision)
     {
         if (collision.gameObject.CompareTag ("Player"))
